@@ -1,0 +1,57 @@
+pipeline
+{
+    agent any
+
+    parameters{
+        choice(
+            name: 'ENV'
+            choices: ['preprod', 'prod']
+            description: 'select env' 
+        )
+    }
+
+    stages{
+        stage('checkout code'){
+            steps {
+                git "(https://github.com/sk02-cmd/infra-pipeline.git)"
+          }
+        }
+        stage ('terraform init'){
+            steps{
+                sh 'terraform init'
+            }
+        }
+        stage ('terraform validate' ){
+            steps{
+                sh 'terraform valid'
+            }
+        }
+        stage('Fmt Check') {
+
+            steps {
+                sh 'terraform fmt -check'
+            }
+        }
+        stage ('terraform plan'){
+            steps{
+                sh """
+                terraform plan \
+                -var-file=env/${ENV}.tfvars \
+                -out=tfplan
+                """
+            }
+        }
+        stage ('Archive plan'){
+            
+        steps {
+
+                archiveArtifacts(
+                    artifacts: 'tfplan',
+                    fingerprint: true
+                )
+            }
+    }
+
+
+}
+}

@@ -1,0 +1,41 @@
+pipeline{
+    agent any
+
+    parameter{
+        name: 'ENV'
+        choices: ['preprod','prod']
+        description: 'select env'
+    }
+
+    stages{
+        stage('Approval'){
+            input ( "approval for ${ENV}?" 
+            )
+        }
+        stage('Download Plan') {
+
+            steps {
+
+                copyArtifacts(
+                    projectName: 'terraform-plan',
+                    selector: lastSuccessful()
+                )
+            }
+        }
+
+        stage('Terraform Init') {
+
+            steps {
+
+                sh 'terraform init'
+            }
+        }
+        stage('Terraform Apply') {
+
+            steps {
+
+                sh 'terraform apply -auto-approve tfplan'
+            }
+        }
+    }
+}
