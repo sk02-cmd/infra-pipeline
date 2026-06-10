@@ -2,11 +2,11 @@ pipeline
 {
     agent any
 
-    parameters{
+    parameters {
         choice(
-            name: 'ENV'
-            choices: ['preprod', 'prod'] as String[],
-            description: 'select env' 
+            name: 'ENVIRONMENT',
+            choices: ['preprod', 'prod'],
+            description: 'Select environment'
         )
     }
 
