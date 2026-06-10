@@ -2,7 +2,7 @@ terraform {
 
   backend "s3" {
 
-    bucket = "terraform-state-company"
+    bucket = "terraform-state-company-shweta"
 
     key = "network/terraform.tfstate"
 
