@@ -9,6 +9,9 @@ pipeline
             description: 'Select environment'
         )
     }
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('aws-creds')
+    }
 
     stages{
         stage('Checkout Code') {
